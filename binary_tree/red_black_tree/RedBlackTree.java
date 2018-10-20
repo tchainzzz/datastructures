@@ -11,9 +11,8 @@
 */
 
 package binary_tree.red_black_tree;
-
-import binary_tree.red_black_tree.RedBlackTree.TreeNode;
-import sun.reflect.generics.tree.Tree;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RedBlackTree<T extends Comparable<? super T>> {
 
@@ -22,17 +21,43 @@ public class RedBlackTree<T extends Comparable<? super T>> {
     private TreeNode<T> root;
     private int size;
 
+    @SafeVarargs
     public RedBlackTree(T ... data) {
-        size = 0;
+        this.root = null;
+        this.size = 0;
         for (T dataPoint : data) {
             insert(dataPoint);
         }
     }
 
-        public void insert(T data) {
+    public void insert(T data) {
         TreeNode<T> newNode = new TreeNode<T>(data, true);
-        
-        size++;
+        TreeNode<T> current = this.root;
+        TreeNode<T> parent = null;
+        if (this.root == null) {
+            newNode.setColor(false);
+            this.root = newNode; 
+        } else {
+            while (current != null) {
+                parent = current;
+                if (data.compareTo(current.data) < 0) {
+                    current = current.getLeftChild();
+                } else if (data.compareTo(current.data) > 0) {
+                    current = current.getRightChild();
+                } else { //data.compareTo(current.data) == 0
+                    current.addNodeHere();
+                    break;
+                }
+            }
+            //now parent is the last node we traversed, and curr is a NIL node.
+            if (data.compareTo(parent.data) < 0 ){
+                parent.setLeftChild(newNode);
+            } else if (data.compareTo(parent.data) > 0) {
+                parent.setRightChild(newNode);
+            } else {
+                parent.addNodeHere();
+            }
+        }
     }
 
     public void delete() {
@@ -67,20 +92,18 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      */
 
     private class TreeNode<T extends Comparable<? super T>> { 
-        T data;
-        boolean red; //toggle to represent if a node is red or black
-        TreeNode<T> left_child;
-        TreeNode<T> right_child;
+        private final T data;
+        private boolean red; //toggle to represent if a node is red or black
+        private int nodesAtLocation; //for storing duplicates
+        private TreeNode<T> left_child;
+        private TreeNode<T> right_child;
 
         TreeNode(T data, boolean red) {
             this.data = data;
+            this.nodesAtLocation = 1; 
             this.red = red; //default is black node
             this.left_child = null;
             this.right_child = null;
-        }
-
-        private boolean isNilNode() {
-            return this.left_child == null && this.right_child == null;
         }
 
         /* GETTERS */
@@ -103,10 +126,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
         /* SETTERS */
 
-        private void setData(T data) {
-            this.data = data;
-        }
-
         private void setColor(boolean red) {
             this.red = red;
         }
@@ -119,11 +138,10 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             this.right_child = node;
         }
 
-        @Override
-        public boolean equals(Object other) {
-            if (other == this) return true;
-            //TODO: figure out how to compare T
+        private void addNodeHere() {
+            this.nodesAtLocation++;
         }
+
     }
 
 }
