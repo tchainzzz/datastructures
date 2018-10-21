@@ -179,6 +179,30 @@ public class RedBlackTree<T extends Comparable<? super T>> {
         return this.root;
     }
 
+    public static <T extends Comparable<? super T>> void joinTrees(RedBlackTree<T> lhs, T partition, RedBlackTree<T> rhs) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
+    public static <T extends Comparable<? super T>> void splitTree(RedBlackTree<T> tree, T partition) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
+    public static <T extends Comparable<? super T>> void union(RedBlackTree<T> lhs, RedBlackTree<T> rhs) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
+    public static <T extends Comparable<? super T>> void intersect(RedBlackTree<T> lhs, RedBlackTree<T> rhs) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
+    public static <T extends Comparable<? super T>> void difference(RedBlackTree<T> lhs, RedBlackTree<T> rhs) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
+    public static <T extends Comparable<? super T>> void symmetricDifference(RedBlackTree<T> lhs, RedBlackTree<T> rhs) {
+        throw new RuntimeException("Not yet implemented!");
+    }
+
     @Override
     public String toString() {
         throw new RuntimeException("Not yet implemented!");
