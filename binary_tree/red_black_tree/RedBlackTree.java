@@ -87,9 +87,9 @@ public class RedBlackTree<T extends Comparable<? super T>> {
           rebalance(newest.getGrandparent());
        } else { //ommer is black
           if (newest == newest.getGrandparent().getLeftChild().getRightChild()) { //converts left->right case to left->left
-            rotateLeft(newest);
+            rotateLeft(newest.getParent());
           } else if (newest == newest.getGrandparent().getRightChild().getLeftChild()) { //converts right->left->case to right->right
-            rotateRight(newest);
+            rotateRight(newest.getParent());
           }
           if (newest == newest.getParent().getLeftChild()) {
               rotateRight(newest.getGrandparent());
@@ -99,6 +99,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
        }
        newest.getParent().setColor(false);
        newest.getGrandparent().setColor(true); 
+       //all balanced! whew! 
     }
 
     /**
@@ -116,7 +117,46 @@ public class RedBlackTree<T extends Comparable<? super T>> {
     }
 
     private void rotate(TreeNode<T> pivot, boolean left) {
+        TreeNode<T> newParent = null;
+        TreeNode<T> parent = pivot.getParent();
+        try {
+            if (left) {
+                newParent = pivot.getRightChild();
+            } else {
+                newParent = pivot.getLeftChild();
+            }
+        } catch (NullPointerException e) {
+           //you can't rotate around a null node, so left and right child of the pivot must exist!
+           return;
+        }
+        assert(newParent != null);
+        //rotate nodes
+        if (left) {
+            pivot.setRightChild(newParent.getLeftChild());
+            newParent.setLeftChild(pivot);
+        } else {
+            pivot.setLeftChild(newParent.getRightChild());
+            newParent.setRightChild(pivot);
+        } 
+        pivot.setParent(newParent);
 
+        //reattach children
+        if (pivot.getRightChild() != null) {
+            pivot.getRightChild().setParent(pivot);
+        } 
+        if (pivot.getLeftChild() != null) {
+            pivot.getLeftChild().setParent(pivot);
+        }
+
+        //reconnect to parent
+        if (parent != null) {
+            if (pivot == parent.getLeftChild()) {
+                parent.setLeftChild(newParent);
+            } else if (pivot == parent.getRightChild()) {
+                parent.setRightChild(newParent);
+            }
+        }
+        newParent.setParent(parent);
     }
 
     public void delete(T key) {
