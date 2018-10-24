@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: binary_tree.red_black_tree.RedBlackTreeTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.065 sec <<< FAILURE! - in binary_tree.red_black_tree.RedBlackTreeTest
+test(binary_tree.red_black_tree.RedBlackTreeTest)  Time elapsed: 0.012 sec  <<< FAILURE!
+java.lang.AssertionError: No
+	at binary_tree.red_black_tree.RedBlackTreeTest.test(RedBlackTreeTest.java:10)
+

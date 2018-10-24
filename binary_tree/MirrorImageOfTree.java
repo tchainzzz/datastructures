@@ -3,20 +3,20 @@
  */
 
 package binarytree;
-import  java.util.Scanner;
+
+import java.util.Scanner;
 
 class Node {
 	Node left;
 	Node right;
 	int value;
 
-	Node (int v) {
+	Node(int v) {
 		value = v;
 		right = null;
 		left = null;
 	}
 }
-
 
 public class MirrorImageOfTree {
 	private static void inOrder(Node root) {
@@ -44,8 +44,8 @@ public class MirrorImageOfTree {
 	}
 
 	public static void main(String[] args) {
-		//Scanner sc = new Scanner(System.in);
-		//System.out.println("Enter the bianry tree values: ");
+		// Scanner sc = new Scanner(System.in);
+		// System.out.println("Enter the bianry tree values: ");
 		Node root = new Node(1);
 		root.left = new Node(3);
 		root.right = new Node(2);
@@ -60,7 +60,6 @@ public class MirrorImageOfTree {
 		System.out.println();
 		inOrder(root);
 		System.out.println();
-
 
 	}
 }

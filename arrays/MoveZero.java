@@ -4,7 +4,6 @@
  * the negatives to the end of array.
  */
 package arrays;
-import utilities.Utilities;
 
 public class MoveZero {
 	public static void moveNegativesToEnd(int[] array) {
