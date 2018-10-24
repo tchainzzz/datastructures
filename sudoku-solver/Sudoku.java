@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Sudoku {
-	int[][] sudokuMatrix;
+	public int[][] sudokuMatrix;
 	public String fileName;
 
 	public Sudoku(String filename) throws FileNotFoundException {
@@ -58,13 +58,11 @@ public class Sudoku {
 				return false;
 			}
 		}
-		// Check that specific mini 2X3 matrix
-		int countRow = 0;
-		int countCol = 0;
-		for (int k = i; countRow < 3; k++, k %= 3) {
-			countRow += 1;
-			for (int l = j; countCol < 3; l++, l %= 3) {
-				countCol += 1;
+		// Check that specific mini 3X3 matrix
+		int q = i - i%3;
+		int r = j - j%3;
+		for (int k = q; k < (q+3); k++) {
+			for (int l = r; l < (r+3); l++) {
 				if (sudokuMatrix[k][l] == valueToPut) {
 					return false;
 				}
@@ -79,25 +77,54 @@ public class Sudoku {
 		return sudokuMatrix[i][j] == -1 ? true : false;
 	}
 
+	public boolean findEmptySpace() {
+		for (int i = 0; i < 9; i++) {
+			for (int j =0; j < 9; j++) {
+				if (sudokuMatrix[i][j] == -1)
+					return true;
+			}
+		}
+		return false;
+	}
+
 	/* Method to solve the sudoku using backtracking.
 	 */
-	public void solveIt(int i, int j, int valueToPut) {
-		if (i < 0 || j < 0 || i >= 9 || j >= 9) {
-			return;
-		}
-		else {
-			for (int k = i; k < 9; k++) {
-				for (int l = j; l < 9; l++) {
-					if (isEmpty(i, j)) {
-						for (int v = 1; v <= 9; v++) {
-							if (isSafe(i, j, v)) {
-								sudokuMatrix[i][j] = v;
+	public boolean solveIt() {
+		for (int a = 0; a < 9; a++) {
+			for (int b =0; b < 9; b++) {
+				if (isEmpty(a,b)) {
+
+					for (int k = 1; k <= 9; k++) {
+						if (isSafe(a, b, k)) {
+							sudokuMatrix[a][b] = k;
+							print(sudokuMatrix);
+							if (solveIt()) {
+								return true;
 							}
+							sudokuMatrix[a][b] = -1;
 						}
 					}
+					return false;
 				}
 			}
 		}
+		return true;
+	}
+
+	// Print the sudo
+	public static void print(int[][] matrix) {
+		System.out.println("---------------------");
+		System.out.println("---------------------");
+
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}
+
+		System.out.println("---------------------");
+		System.out.println("---------------------");
 	}
 }
 

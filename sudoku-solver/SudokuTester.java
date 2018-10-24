@@ -37,5 +37,7 @@ class SudokuTester {
 	
 		// Check the file name
 		System.out.println("getFileName() method testcase: " + ((sudo.getFileName() == "sudoku_file") ? "Passed" : "Failed"));
+		sudo.solveIt();
+		print(sudo.sudokuMatrix);
 	}
 }
