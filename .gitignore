@@ -1,6 +1,10 @@
 *iml
 *idea
 *.class
-*.project
+.project
 *.vscode*
 *.xml
+*.txt
+*.lst
+target/*
+bin/

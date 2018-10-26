@@ -12,7 +12,6 @@
  *
  */
 
-package red_black_tree;
 
 public class RedBlackTree<T extends Comparable<? super T>> {
 
@@ -173,11 +172,11 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
     }
 
-    public static RedBlackTree generateTree() {
-        return generateTree(DEFAULT_TREE_SIZE);
+    public static RedBlackTree generateIntegerTree() {
+        return generateIntegerTree(DEFAULT_TREE_SIZE);
     }
 
-    public static RedBlackTree generateTree(int size) {
+    public static RedBlackTree generateIntegerTree(int size) {
         throw new RuntimeException("Not yet implemented!");
     }
 
@@ -225,7 +224,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      * compilers are capable of autoboxing, this doesn't affect primitive classes.
      */
 
-    private class TreeNode<T extends Comparable<? super T>> {
+    public class TreeNode<T extends Comparable<? super T>> {
         private final T data;
         private boolean red; // toggle to represent if a node is red or black
         private int nodesAtLocation; // for storing duplicates
@@ -273,23 +272,23 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
         /* GETTERS */
 
-        private T getData() {
+        public T getData() {
             return this.data;
         }
 
-        private boolean getColor() {
+        public boolean getColor() {
             return this.red;
         }
 
-        private TreeNode<T> getParent() {
+        public TreeNode<T> getParent() {
             return this.parent;
         }
 
-        private TreeNode<T> getLeftChild() {
+        public TreeNode<T> getLeftChild() {
             return this.left_child;
         }
 
-        private TreeNode<T> getRightChild() {
+        public TreeNode<T> getRightChild() {
             return this.right_child;
         }
 
@@ -313,6 +312,15 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
         private void addNodeHere() {
             this.nodesAtLocation++;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(this.data.toString())
+            .append(" - ")
+            .append(this.red ? "R" : "B");
+            return sb.toString();
         }
 
     }
