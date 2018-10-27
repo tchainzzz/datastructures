@@ -203,7 +203,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
         if (trash.isLeaf()) { //0 children
             this.replaceNode(trash, null);
         } else if (trash.getRightChild() != null && trash.getLeftChild() != null) { //2 children
-            //TODO!
+            this.replaceNode(trash, findInOrderSuccessor(trash));
         } else { //1 child
             if (trash.getRightChild() == null) {
                 this.replaceNode(trash, trash.getLeftChild());
@@ -214,18 +214,44 @@ public class RedBlackTree<T extends Comparable<? super T>> {
     }
 
     private void replaceNode(TreeNode<T> node, TreeNode<T> replaceWith) {
-        replaceWith.setParent(node.getParent());
-        if (node.equals(node.getParent().getLeftChild())) {
-            node.getParent().setLeftChild(replaceWith);
-        } else {
-            node.getParent().setRightChild(replaceWith);
+        TreeNode<T> oldParent = null;
+        if (replaceWith != null) {
+            oldParent = replaceWith.getParent();
+            replaceWith.setParent(node.getParent());
         }
+        if (node.equals(this.root)) {
+            replaceWith.setLeftChild(node.getLeftChild());
+            replaceWith.setRightChild(node.getRightChild());
+            this.root = replaceWith;
+        } else {
+            if (node.equals(node.getParent().getLeftChild())) {
+                node.getParent().setLeftChild(replaceWith);
+            } else {
+                node.getParent().setRightChild(replaceWith);
+            }
+            
+        }
+        if (replaceWith != null) {
+            if (replaceWith.equals(oldParent.getLeftChild())) oldParent.setLeftChild(null);
+            if (replaceWith.equals(oldParent.getRightChild())) oldParent.setRightChild(null);
+            replaceWith.getLeftChild().setParent(replaceWith);
+            replaceWith.getRightChild().setParent(replaceWith);
+        }
+        
+    }
+
+    private TreeNode<T> findInOrderSuccessor(TreeNode<T> curr) {
+        curr = curr.getRightChild();
+        while (curr.getLeftChild() != null) {
+            curr = curr.getLeftChild();
+        }
+        return curr;
     }
 
     public TreeNode<T> find(T key) {
-        TreeNode<T> currNode = this.getRoot();
+        TreeNode<T> currNode = this.root;
         T currData = currNode.getData();
-        while (currData.compareTo(key) != 0) {
+        while (currNode != null) {
             if (currData.compareTo(key) < 0) {
                 currNode = currNode.getLeftChild();
             } else if (currData.compareTo(key) > 0) {
