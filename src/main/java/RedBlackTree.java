@@ -12,6 +12,9 @@
  *
  * This class can contain any type that extends Comparable<T>. In other words, the enclosed type must be a linear order
  * (trichotomous and transitive).
+ * 
+ * From a memory usage standpoint, the RedBlackTree class can handle very large inputs on the order of 2^26 nodes, although
+ * past 2^20 nodes things start to become slow. The JVM runs out of memory on my system at 2^27 nodes.
  */
 
 import java.util.ArrayList;
@@ -55,7 +58,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             newNode.setColor(false);
             this.root = newNode;
         } else {
-            System.out.println("Searching");
             while (current != null) {
                 parent = current;
                 if (data.compareTo(current.data) < 0) {
@@ -73,10 +75,12 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             if (data.compareTo(parent.data) < 0) {
                 parent.setLeftChild(newNode);
                 newNode.setParent(parent);
+                size++;
                 rebalance(newNode);
             } else if (data.compareTo(parent.data) > 0) {
                 parent.setRightChild(newNode);
                 newNode.setParent(parent);
+                size++;
                 rebalance(newNode);
             } else {
                 parent.addNodeHere();
@@ -85,7 +89,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
     }
 
     private void rebalance(TreeNode<T> newest) {
-        System.out.println("Rebalancing");
         if (newest == null) return;
         if (newest.equals(this.root)) return;
         if (!newest.getParent().getColor()) return; // if parent is black, we're done
@@ -133,7 +136,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      * RIGHT child of its LEFT child.
      */
     public void rotateLeft(TreeNode<T> pivot) {
-        System.out.println("Rotating right");
         rotate(pivot, true);
     }
 
@@ -142,7 +144,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      * a LEFT child of its RIGHT child.
      */
     public void rotateRight(TreeNode<T> pivot) {
-        System.out.println("Rotating right");
         rotate(pivot, false);
     }
 
@@ -252,7 +253,6 @@ public class RedBlackTree<T extends Comparable<? super T>> {
     public static RedBlackTree<Integer> generateIntegerTree(int size) {
         RedBlackTree<Integer> tree = new RedBlackTree<>();
         for (int i = 0; i < size; i++) {
-            System.out.println("Creating and inserting node with data " + i);
             tree.emplace(i);
         }
         return tree;

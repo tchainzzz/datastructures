@@ -49,5 +49,25 @@ public class RedBlackTreeTest {
 		
 	}
 
+	@Test
+	public void massiveTreeTest() {
+		int size = (int) Math.pow(2, 27);
+		RedBlackTree<Integer> tree = RedBlackTree.generateIntegerTree(size - 1);
+		assertNotNull(tree);
+		assertTrue(tree.getHeight() <= (2 * (Math.log(size)/Math.log(2))));
+		System.out.println("Actual tree height: " + tree.getHeight());
+		System.out.println("Nodes: " + tree.getSize());
+	}
+
+	@Test
+	public void deletionTest() {
+		RedBlackTree<Integer> tree = RedBlackTree.generateIntegerTree(7);
+		assertNotNull(tree);
+		tree.delete(99999); //should delete nothing
+		tree.delete(6);
+		tree.delete(1);
+		System.out.println(tree.toString());
+	}
+
 
 }
