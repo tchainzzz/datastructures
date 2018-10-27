@@ -38,9 +38,15 @@ public class RedBlackTreeTest {
 
 	@Test
 	public void printTreeTest() {
-		RedBlackTree<Integer> tree = RedBlackTree.generateIntegerTree(7);
-		assertNotNull(tree);
-		System.out.println(tree.toString());
+		for (int i = 0; i < 15; i++) {
+			System.out.println("Tree size: " + i);
+			System.out.println();
+			RedBlackTree<Integer> tree = RedBlackTree.generateIntegerTree(i);
+			assertNotNull(tree);
+			System.out.println(tree.toString());
+			System.out.println("---------------------------------------------------------------");
+		}
+		
 	}
 
 

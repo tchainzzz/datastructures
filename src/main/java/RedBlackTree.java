@@ -55,9 +55,9 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             newNode.setColor(false);
             this.root = newNode;
         } else {
+            System.out.println("Searching");
             while (current != null) {
                 parent = current;
-                System.out.println("Location: val=" + current.getData());
                 if (data.compareTo(current.data) < 0) {
                     current = current.getLeftChild();
                 } else if (data.compareTo(current.data) > 0) {
@@ -67,9 +67,8 @@ public class RedBlackTree<T extends Comparable<? super T>> {
                     break;
                 }
             }
-            System.out.println("Insertion location found!");
 
-
+            
             // now parent is the last node we traversed, and curr is a NIL node.
             if (data.compareTo(parent.data) < 0) {
                 parent.setLeftChild(newNode);
@@ -83,12 +82,13 @@ public class RedBlackTree<T extends Comparable<? super T>> {
                 parent.addNodeHere();
             }
         }
-        System.out.println(newNode.toString() + " inserted");
     }
 
     private void rebalance(TreeNode<T> newest) {
-        if (!newest.getParent().getColor())
-            return; // if parent is black, we're done
+        System.out.println("Rebalancing");
+        if (newest == null) return;
+        if (newest.equals(this.root)) return;
+        if (!newest.getParent().getColor()) return; // if parent is black, we're done
         boolean ommerIsRed = newest.getOmmer() == null ? false : newest.getOmmer().getColor();
         if (!ommerIsRed) {
             if (newest.getGrandparent() != null) {
@@ -101,6 +101,12 @@ public class RedBlackTree<T extends Comparable<? super T>> {
                     // to right->right
                     if (newest.equals(grandparentRightChild.getLeftChild())) rotateRight(newest.getParent());
                 }
+            } else {
+                if (newest.equals(newest.getParent().getRightChild())) {
+                    rotateLeft(newest.getParent());
+                } else if (newest.equals(newest.getParent().getLeftChild())) {
+                    rotateRight(newest.getParent());
+                }
             }
 
             
@@ -112,7 +118,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
         } else {
              // recolor to stay with red-black property
              newest.getParent().setColor(false);
-             newest.getOmmer().setColor(false);
+             if (newest.getOmmer() != null) newest.getOmmer().setColor(false);
              // recurse upward to maintain red-black properties
              rebalance(newest.getGrandparent());
         }
@@ -127,6 +133,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      * RIGHT child of its LEFT child.
      */
     public void rotateLeft(TreeNode<T> pivot) {
+        System.out.println("Rotating right");
         rotate(pivot, true);
     }
 
@@ -135,29 +142,35 @@ public class RedBlackTree<T extends Comparable<? super T>> {
      * a LEFT child of its RIGHT child.
      */
     public void rotateRight(TreeNode<T> pivot) {
+        System.out.println("Rotating right");
         rotate(pivot, false);
     }
 
     private void rotate(TreeNode<T> pivot, boolean left) {
+        if (pivot == null) return;
         TreeNode<T> newParent = null;
         TreeNode<T> parent = pivot.getParent();
-
         if (left) {
-            newParent = pivot.getRightChild();
-        } else {
             newParent = pivot.getLeftChild();
+        } else {
+            newParent = pivot.getRightChild();
         }
         
-        if (newParent == null) return;
+        assert (newParent != null); 
         // rotate nodes
         if (left) {
-            pivot.setRightChild(newParent.getLeftChild());
-            newParent.setLeftChild(pivot);
-        } else {
             pivot.setLeftChild(newParent.getRightChild());
             newParent.setRightChild(pivot);
+        } else {
+            pivot.setRightChild(newParent.getLeftChild());
+            newParent.setLeftChild(pivot);
         }
         pivot.setParent(newParent);
+
+        //swap colors
+        boolean temp = pivot.getColor();
+        pivot.setColor(newParent.getColor());
+        newParent.setColor(temp);
 
         // reattach children
         if (pivot.getRightChild() != null) {
@@ -176,6 +189,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             }
         }
         newParent.setParent(parent);
+        if (pivot.equals(this.root)) this.root = newParent;
     }
 
     public void delete(TreeNode<T> node) {
@@ -299,15 +313,13 @@ public class RedBlackTree<T extends Comparable<? super T>> {
                 sb.append(data);
                 for (int j = 0; j < padding; j++) sb.append(' ');
             }
-            for (int j = 0; j < firstIndex; j++) sb.append(' ');
             sb.append('\n');
             if (i == height - 1) continue;
-            for (int j = 0; j < firstIndex; j++) sb.append(' ');
-            for (int j = 0; j < nodesAtLevel; j++) {
+            for (int j = 0; j < firstIndex - 1; j++) sb.append(' ');
+            for (int j = 0; j < levelArray.get(i+1).size(); j++) {
                 sb.append(j % 2 == 0 ? '/' : "\\");
-                for (int k = 0; j < padding; j++) sb.append(' ');
+                for (int k = 0; k < padding; k++) sb.append(' ');
             }
-            for (int j = 0; j < firstIndex; j++) sb.append(' ');
             sb.append('\n');
         }
         return sb.toString();
@@ -437,7 +449,7 @@ public class RedBlackTree<T extends Comparable<? super T>> {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(this.data.toString())
-            .append(" - ")
+            .append(": ")
             .append(this.red ? "R" : "B");
             return sb.toString();
         }
