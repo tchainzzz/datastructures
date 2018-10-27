@@ -19,6 +19,7 @@
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class RedBlackTree<T extends Comparable<? super T>> {
@@ -199,16 +200,46 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
     public void delete(T key) {
         TreeNode<T> trash = this.find(key);
+        TreeNode<T> replaceWith = null;
+        
+        //Step One: BST-style delete
         if (trash == null) return; //no key to delete
         if (trash.isLeaf()) { //0 children
             this.replaceNode(trash, null);
         } else if (trash.getRightChild() != null && trash.getLeftChild() != null) { //2 children
-            this.replaceNode(trash, findInOrderSuccessor(trash));
+            replaceWith = findInOrderSuccessor(trash);
+            this.replaceNode(trash, replaceWith);
         } else { //1 child
             if (trash.getRightChild() == null) {
-                this.replaceNode(trash, trash.getLeftChild());
+                replaceWith = trash.getLeftChild();                
             } else { //leftChild is null
-                this.replaceNode(trash, trash.getRightChild()); 
+                replaceWith = trash.getRightChild();
+            }
+            this.replaceNode(trash, replaceWith);
+        }
+
+        //Step Two: enforce RBT color property
+        boolean deletedWasRed = trash.getColor();
+        boolean replacedWithRed = replaceWith == null ? false : replaceWith.getColor();
+        if (deletedWasRed || replacedWithRed) {
+            replaceWith.setColor(false);
+        } else if (!deletedWasRed && !replacedWithRed) {
+            //things get quite complicated
+            boolean doubleBlack = true; //deleted was not red, and replacement was not red
+
+            if (this.root.equals(replaceWith)) {
+                replaceWith.setColor(false);
+                return;
+            }
+            //TODO: handle null nodes!
+            if (replaceWith.getSibling().isBlack()) {
+                if (replaceWith.getLeftNibling().isRed() || replaceWith.getRightNibling().isRed()) {
+                    
+                } else { //both are black
+                    
+                }
+            } else { //sibling is red
+                
             }
         }
     }
@@ -423,6 +454,29 @@ public class RedBlackTree<T extends Comparable<? super T>> {
             }
         }
 
+        public TreeNode<T> getLeftNibling() {
+            try {
+                return this.parent.getSibling().getLeftChild();
+            } catch (NullPointerException e) {
+                return null;
+            }
+        }
+
+        public TreeNode<T> getRightNibling() {
+            try {
+                return this.parent.getSibling().getRightChild();
+            } catch (NullPointerException e) {
+                return null;
+            }
+        }
+
+        public List<TreeNode<T>> getNiblings() {
+            List<TreeNode<T>> list = new ArrayList<>();
+            list.add(getLeftNibling());
+            list.add(getRightNibling());
+            return list;
+        }
+
         /* GETTERS */
 
         public T getData() {
@@ -431,6 +485,14 @@ public class RedBlackTree<T extends Comparable<? super T>> {
 
         public boolean getColor() {
             return this.red;
+        }
+
+        public boolean isRed() {
+            return this.red;
+        }
+
+        public boolean isBlack() {
+            return !this.red;
         }
 
         public TreeNode<T> getParent() {
