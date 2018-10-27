@@ -3,6 +3,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 public class RedBlackTreeTest {
+	
 	@Test
 	public void nullTest() {
 		RedBlackTree<Integer> tree = new RedBlackTree<>();
@@ -35,11 +36,12 @@ public class RedBlackTreeTest {
 		assertEquals(tree.getRoot(), tree.getRoot().getRightChild().getParent());
 	}
 
-	// public void printTreeTest() {
-	// 	RedBlackTree<Integer> tree = new RedBlackTree<>();
-	// 	tree.emplace(1);
-	// 	tree.emplace(2);
-	// 	tree.emplace(3);
-	// }
+	@Test
+	public void printTreeTest() {
+		RedBlackTree<Integer> tree = RedBlackTree.generateIntegerTree(7);
+		assertNotNull(tree);
+		System.out.println(tree.toString());
+	}
+
 
 }

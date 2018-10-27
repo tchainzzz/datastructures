@@ -2,9 +2,8 @@
 *idea
 *.class
 .project
-*.vscode*
+.vscode/
 *.xml
 *.txt
-*.lst
-target/*
+target/
 bin/
